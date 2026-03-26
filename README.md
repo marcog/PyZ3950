@@ -62,6 +62,11 @@ Available built-in profiles:
 - `sudoc`
 - `bnf`
 - `sbn`
+- `chicago`
+- `metmuseum`
+- `nybg`
+- `openuniversity`
+- `kbdk`
 
 `sbn` defaults:
 
@@ -76,6 +81,7 @@ Profile notes:
 
 - `loc` defaults to `USMARCnonstrict` because that is the live-tested rendering path for current LoC responses.
 - `libris` defaults to `USMARCnonstrict` for the same reason.
+- `chicago`, `metmuseum`, `nybg`, `openuniversity`, and `kbdk` have been live-tested with public title/keyword searches and also default to `USMARCnonstrict`.
 
 ## Legacy Notes
 
@@ -121,6 +127,5 @@ Aaron Lav <asl2@pobox.com>
 ## License
 
 X Consortium License (Note that since X-Windows is now covered by the MIT License, this may be soon, but I hesitate to change it without the constructive agreement of the author.)
-
 
 

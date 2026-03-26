@@ -2,7 +2,18 @@ from PyZ3950 import profiles
 
 
 def test_known_profile_keys():
-    assert profiles.keys() == ["bnf", "libris", "loc", "sbn", "sudoc"]
+    assert profiles.keys() == [
+        "bnf",
+        "chicago",
+        "kbdk",
+        "libris",
+        "loc",
+        "metmuseum",
+        "nybg",
+        "openuniversity",
+        "sbn",
+        "sudoc",
+    ]
 
 
 def test_connect_applies_profile_defaults_without_network():
@@ -44,3 +55,20 @@ def test_sbn_profile_defaults():
     assert profile.alternate_ports == (3950,)
     assert profile.available_record_syntaxes == ("UNIMARC", "MARC21", "SUTRS")
     assert len(profile.attribute_profile) == 3
+
+
+def test_new_public_profiles_defaults():
+    checks = {
+        "chicago": ("uchicago-z3950.folio.indexdata.com", 210, "chicago"),
+        "metmuseum": ("library.metmuseum.org", 210, "INNOPAC"),
+        "nybg": ("willow.nybg.org", 210, "INNOPAC"),
+        "openuniversity": ("eu01.alma.exlibrisgroup.com", 1921, "44OPN_INST"),
+        "kbdk": ("kbdk-kgl.alma.exlibrisgroup.com", 1921, "45KBDK_KGL"),
+    }
+
+    for key, (host, port, db) in checks.items():
+        conn = profiles.connect(key, connect=False)
+        assert conn.host == host
+        assert conn.port == port
+        assert conn.databaseName == db
+        assert conn.preferredRecordSyntax == "USMARCnonstrict"

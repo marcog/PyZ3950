@@ -121,6 +121,71 @@ PROFILES: Dict[str, ConnectionProfile] = {
             "Profile details sourced from 'Attributi di Bib1 ed estensioni del profilo SBN - BOZZA'.",
         ),
     ),
+    "chicago": ConnectionProfile(
+        key="chicago",
+        name="University of Chicago Library",
+        host="uchicago-z3950.folio.indexdata.com",
+        port=210,
+        database_name="chicago",
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
+        notes=(
+            "Live-tested public target.",
+            "FOLIO/Index Data hosted endpoint.",
+        ),
+    ),
+    "metmuseum": ConnectionProfile(
+        key="metmuseum",
+        name="Metropolitan Museum of Art Library",
+        host="library.metmuseum.org",
+        port=210,
+        database_name="INNOPAC",
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
+        notes=(
+            "Live-tested public target.",
+            "INNOPAC endpoint.",
+        ),
+    ),
+    "nybg": ConnectionProfile(
+        key="nybg",
+        name="New York Botanical Garden",
+        host="willow.nybg.org",
+        port=210,
+        database_name="INNOPAC",
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
+        notes=(
+            "Live-tested public target.",
+            "INNOPAC endpoint.",
+        ),
+    ),
+    "openuniversity": ConnectionProfile(
+        key="openuniversity",
+        name="The Open University",
+        host="eu01.alma.exlibrisgroup.com",
+        port=1921,
+        database_name="44OPN_INST",
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
+        notes=(
+            "Live-tested public target.",
+            "Alma endpoint from the Ex Libris external resources list.",
+        ),
+    ),
+    "kbdk": ConnectionProfile(
+        key="kbdk",
+        name="Royal Danish Library / Copenhagen University Library",
+        host="kbdk-kgl.alma.exlibrisgroup.com",
+        port=1921,
+        database_name="45KBDK_KGL",
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
+        notes=(
+            "Live-tested public target.",
+            "Alma endpoint from the Ex Libris external resources list.",
+        ),
+    ),
 }
 
 
