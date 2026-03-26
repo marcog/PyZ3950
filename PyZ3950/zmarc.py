@@ -154,7 +154,7 @@ class MARC:
     # Status, Type, Bib. Level, Type of Ctrl., Enc. Level,
     # Descr. Cat. Form, Linked Rcd Reqt are all part of pseudoentry 0
 
-    def __init__(self, MARC = None, strict = 1):
+    def __init__(self, MARC = None, strict = 1, charset = None):
         """Parses MARC data.  According to Bill Oldroyd (Bill.Oldroyd at
         bl.uk), some servers don't set the character set and/or other
         bits of the MARC header properly, so it's useful to set strict=0
@@ -162,6 +162,7 @@ class MARC:
         self.fields = {}
         self.ok = 0
         self.marc = MARC
+        self.charset = charset
         if MARC == None:
             return # we'll write to it later
         reclen = self.extract_int (0,4)
@@ -216,15 +217,23 @@ class MARC:
         for field in k:
             lst.append (self.stringify_field (field))
         return "MARC: \n" + "\n".join (lst)
+    def _decode_text(self, text):
+        if self.charset is None or not isinstance(text, str):
+            return text
+        try:
+            text = text.encode('latin-1').decode(self.charset)
+        except (UnicodeEncodeError, UnicodeDecodeError, LookupError):
+            return text
+        return text.replace('\x88', '').replace('\x89', '')
     def stringify_field (self, k):
         f = self.fields [k]
         if is_fixed (k):
-            return str (k) + " " +  f[0]
+            return str (k) + " " + self._decode_text(f[0])
         else:
             str_l = []
             for l in f:
                 def fmt (x):
-                    return '$%s%s' % (x[0], x[1])
+                    return '$%s%s' % (x[0], self._decode_text(x[1]))
                 sl = list(map (fmt, l[2]))
                 str_l.append (str(k) + " " + l[0] + l[1] + " ".join (sl))
             return "\n".join (str_l)
@@ -1288,5 +1297,4 @@ if __name__ == '__main__':
             if len (marc_text) == 0:
                 break
         marc_file.close ()
-
 

@@ -676,7 +676,7 @@ class ResultSet(_AttrCheck, _ErrHdlr):
                     if typ != 'octet-aligned':
                         raise ProtocolError (
                             "Weird record EXTERNAL MARC type: " + typ)
-                rec = Record (oid, dat, dbname)
+                rec = Record (oid, dat, dbname, getattr(self._conn, 'charset', None))
             else:
                 raise ProtocolError ("Bad typ %s data %s" %
                                      (str (typ), str(data)))
@@ -723,12 +723,13 @@ using this)
       OPAC     -- ditto
       
       Other representations are not yet defined."""
-    def __init__ (self, oid, data, dbname):
+    def __init__ (self, oid, data, dbname, charset = None):
         """Only for use by ResultSet"""
         self.syntax = _oid_to_key (oid)
         self._rt = _record_type_dict [self.syntax]
         self.data = self._rt.preproc (data)
         self.databaseName = dbname
+        self.charset = charset
     def is_surrogate_diag (self):
         return 0
     def get_fieldcount (self):
@@ -739,12 +740,12 @@ using this)
         return self._rt.field (self.data, spec)
     def __str__ (self):
         """Render printably"""
-        s = self._rt.renderer (self.data)
+        s = self._rt.renderer (self.data, self.charset)
         return 'Rec: ' + str (self.syntax) + " " + s
 
 class _RecordType:
     """Map syntax string to OID and per-syntax utility functions"""
-    def __init__ (self, name, oid, renderer = lambda v:v,
+    def __init__ (self, name, oid, renderer = lambda v, charset = None: v,
                   fieldcount = lambda v:1, field = None, preproc = lambda v:v):
         """Register syntax"""
         self.oid = oid
@@ -758,7 +759,7 @@ class _RecordType:
 # a member function.
 
 
-def render_OPAC (opac_data):
+def render_OPAC (opac_data, charset = None):
     s_list = []
     biblio_oid = opac_data.bibliographicRecord.direct_reference
     if (biblio_oid == z3950.Z3950_RECSYN_USMARC_ov):
@@ -800,22 +801,22 @@ def render_OPAC (opac_data):
     return "\n".join (s_list)
 
 _RecordType ('USMARC', z3950.Z3950_RECSYN_USMARC_ov,
-            renderer = lambda v: str(zmarc.MARC(v)))
+            renderer = lambda v, charset = None: str(zmarc.MARC(v, charset=charset)))
 _RecordType ('USMARCnonstrict', z3950.Z3950_RECSYN_USMARC_ov,
-            renderer = lambda v: str(zmarc.MARC(v, strict=0)))
+            renderer = lambda v, charset = None: str(zmarc.MARC(v, strict=0, charset=charset)))
 _RecordType ('UKMARC', z3950.Z3950_RECSYN_UKMARC_ov,
-            renderer = lambda v: str(zmarc.MARC(v)))
+            renderer = lambda v, charset = None: str(zmarc.MARC(v, charset=charset)))
 _RecordType ('UNIMARC', z3950.Z3950_RECSYN_UNIMARC_ov,
-            renderer = lambda v: str(zmarc.MARC(v)))
+            renderer = lambda v, charset = None: str(zmarc.MARC(v, charset=charset)))
 _RecordType ('SUTRS', z3950.Z3950_RECSYN_SUTRS_ov)
 _RecordType ('XML', z3950.Z3950_RECSYN_MIME_XML_ov)
 _RecordType ('SGML', z3950.Z3950_RECSYN_MIME_SGML_ov)
 _RecordType ('GRS-1', z3950.Z3950_RECSYN_GRS1_ov,
-             renderer = lambda v: str (v),
+             renderer = lambda v, charset = None: str (v),
              preproc = grs1.preproc)
 _RecordType ('OPAC', z3950.Z3950_RECSYN_OPAC_ov, renderer = render_OPAC)
 _RecordType ('EXPLAIN', z3950.Z3950_RECSYN_EXPLAIN_ov,
-             renderer = lambda v: str (v))
+             renderer = lambda v, charset = None: str (v))
 
 class ScanSet (_AttrCheck, _ErrHdlr):
     """Hold result of scan.
