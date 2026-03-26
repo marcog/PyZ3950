@@ -49,11 +49,12 @@ PROFILES: Dict[str, ConnectionProfile] = {
         host="lx2.loc.gov",
         port=210,
         database_name="LCDB",
-        preferred_record_syntax="USMARC",
-        available_record_syntaxes=("USMARC",),
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict"),
         notes=(
             "Official public Z39.50 target.",
             "Library of Congress moved the backend to FOLIO in July 2025.",
+            "The live-tested rendering path in this fork uses USMARCnonstrict.",
         ),
     ),
     "libris": ConnectionProfile(
@@ -62,12 +63,13 @@ PROFILES: Dict[str, ConnectionProfile] = {
         host="z3950.libris.kb.se",
         port=210,
         database_name="libr",
-        preferred_record_syntax="USMARC",
-        available_record_syntaxes=("USMARC", "SUTRS"),
+        preferred_record_syntax="USMARCnonstrict",
+        available_record_syntaxes=("USMARC", "USMARCnonstrict", "SUTRS"),
         charset="latin-1",
         notes=(
             "KB documents Bib-1 / type-1 queries.",
             "MARC21 is exposed through the existing USMARC handling in PyZ3950.",
+            "The live-tested rendering path in this fork uses USMARCnonstrict.",
         ),
     ),
     "sudoc": ConnectionProfile(

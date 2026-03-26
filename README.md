@@ -72,6 +72,11 @@ Available built-in profiles:
 - charset `UTF-8`
 - attribute set `BIB1` partial profile plus local SBN extensions
 
+Profile notes:
+
+- `loc` defaults to `USMARCnonstrict` because that is the live-tested rendering path for current LoC responses.
+- `libris` defaults to `USMARCnonstrict` for the same reason.
+
 ## Legacy Notes
 
 This code is updated to support both Python 2.7+ and Python 3.5+ using 2to3
@@ -116,7 +121,6 @@ Aaron Lav <asl2@pobox.com>
 ## License
 
 X Consortium License (Note that since X-Windows is now covered by the MIT License, this may be soon, but I hesitate to change it without the constructive agreement of the author.)
-
 
 
 

@@ -11,7 +11,7 @@ def test_connect_applies_profile_defaults_without_network():
     assert conn.host == "lx2.loc.gov"
     assert conn.port == 210
     assert conn.databaseName == "LCDB"
-    assert conn.preferredRecordSyntax == "USMARC"
+    assert conn.preferredRecordSyntax == "USMARCnonstrict"
     assert conn.elementSetName == "F"
 
 
