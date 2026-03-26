@@ -22,6 +22,7 @@ Current fork baseline:
 - packaging through `setuptools` and `pyproject.toml`
 - focused pytest collection under `tests/`
 - provider profile helpers for `LoC`, `LIBRIS`, `Sudoc`, and `BnF`
+- provider profile helpers for `LoC`, `LIBRIS`, `Sudoc`, `BnF`, and `SBN`
 
 ## Maintainer Notes
 
@@ -60,6 +61,16 @@ Available built-in profiles:
 - `libris`
 - `sudoc`
 - `bnf`
+- `sbn`
+
+`sbn` defaults:
+
+- host `opac.sbn.it`
+- port `2100` with alternate port `3950`
+- database `nopac`
+- record syntaxes `UNIMARC`, `MARC21`, `SUTRS`
+- charset `UTF-8`
+- attribute set `BIB1` partial profile plus local SBN extensions
 
 ## Legacy Notes
 
@@ -105,7 +116,6 @@ Aaron Lav <asl2@pobox.com>
 ## License
 
 X Consortium License (Note that since X-Windows is now covered by the MIT License, this may be soon, but I hesitate to change it without the constructive agreement of the author.)
-
 
 
 
