@@ -6,8 +6,8 @@ import pytest
 
 
 def test_library_of_congress_query():
-    conn = zoom.Connection ('z3950.loc.gov', 7090)
-    conn.databaseName = 'VOYAGER'
+    conn = zoom.Connection ('lx2.loc.gov', 210)
+    conn.databaseName = 'LCDB'
     conn.preferredRecordSyntax = 'USMARC'
 
     query = zoom.Query ('CCL', 'ti="1066 and all that"')

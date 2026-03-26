@@ -1,5 +1,4 @@
 import re
-import pytest
 from PyZ3950 import ccl
 
 def test_word():

@@ -21,9 +21,6 @@ Eventually I will support v3-style mixing attribute sets within
 a single query, but for now I don't.
 """
 
-
-import string
-
 in_setup = 0
 
 try:
@@ -57,7 +54,7 @@ t_RPAREN= r'\)'
 t_COMMA = r','
 t_SLASH = r'/'
 def t_ATTRSET(t):
-    r'(?i:(ATTRSET))'
+    r'(?i:ATTRSET)'
     return t
 
 def t_SET (t): # need to def as function to override parsing as WORD, gr XXX
@@ -97,7 +94,7 @@ def t_QUAL(t):
 
 def mk_quals ():
     quals = ("|".join (['(' + x + ')' for x in list(qual_dict.keys())]))
-    t_QUAL.__doc__ = "(?i:" + quals + r"|(\([0-9]+,[0-9]+\))" + ")"
+    t_QUAL.__doc__ = r"(?i:" + quals + r")|(\([0-9]+,[0-9]+\))"
 
 def t_QUOTEDVALUE(t):
     r"(\".*?\")"
@@ -111,7 +108,7 @@ word_non_init = r",|\.|\'"
 t_WORD = "(%s)(%s|%s)*" % (word_init, word_init, word_non_init)
 
 def t_LOGOP(t):
-    r'(?i:((AND)|(OR)|(NOT)))'
+    r'(?i:(AND)|(OR)|(NOT))'
     return t
 
 
@@ -203,7 +200,7 @@ class QuallistVal:
 def xlate_qualifier (x):
     if x[0] == '(' and x[-1] == ')':
         t = x[1:-1].split (',') # t must be of len 2 b/c of lexer
-        return (string.atoi (t[0]), string.atoi (t[1]))
+        return (int (t[0]), int (t[1]))
     return qual_dict[(x.upper ())]
 
 
@@ -266,7 +263,7 @@ def attrset_to_oid (attrset):
     if split_l[0] == '':
         split_l = oids.Z3950_ATTRS + split_l[1:]
     try:
-        intlist = list(map (string.atoi, split_l))
+        intlist = list(map (int, split_l))
     except ValueError:
         raise ParseError ('Bad OID: ' + l)
     return asn1.OidVal (intlist)
@@ -352,15 +349,13 @@ def testyacc (s):
     print("RPN Query:", ast_to_rpn (ast))
 
 if __name__ == '__main__':
-    # testfn = testyacc
-    testfn = testlex
+    testfn = testyacc
+    #    testfn = testlex
     testfn ('attrset (BIB1/ au="Gaiman, Neil" or ti=Sandman)')
     while 1:
         s = input ('Query: ')
         if len (s) == 0:
             break
         testfn (s)
-    
-    
 #    testyacc ()
 #    testlex ()
