@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-from distutils.core import setup
+from pathlib import Path
 
-import vers
-import os
-import os.path
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
+
+version_ns = {}
+exec((Path(__file__).with_name("vers.py")).read_text(), version_ns)
 
 # Because PLY compiles the yacc grammar to Python code, we need to run
 # that compilation at install time to avoid dropping the created files
@@ -18,12 +20,6 @@ import os.path
 # PyZ3950 works under Python 2.2 but not 2.3, importing with pathnames
 # works under Linux but not Win 98 or XP.)
 
-
-# We define a custom build_ext
-
-from distutils.util import byte_compile
-from distutils.command.build_ext import build_ext
-from distutils.extension import Extension
 
 pyz_dir = "PyZ3950"
 
@@ -43,21 +39,24 @@ classifiers = """\
 Development Status :: 5 - Production/Stable
 Intended Audience :: Developers
 Programming Language :: Python
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3 :: Only
 Topic :: Internet :: Z39.50"""
 
 setup (name="PyZ3950",
-       version= vers.version,
+       version= version_ns["version"],
        author = "Aaron Lav",
        author_email = "asl2@pobox.com",
        license = "X",
        description = 'Z39.50 (ZOOM API), ASN.1, and MARC implementations',
+       python_requires = ">=3.10",
+       install_requires = ["ply", "pyasn1"],
        long_description =
        """Pure Python implementation of ASN.1 and Z39.50 v3,
        with a simple MARC parser thrown in.  See the URL for details.""",
        platforms = ["any"],
-       classifiers = filter(None, classifiers.split("\n")),
+       classifiers = list(filter(None, classifiers.split("\n"))),
        url = "http://www.pobox.com/~asl2/software/PyZ3950",
        packages = ["PyZ3950"],
        cmdclass = {'build_ext' : PLYBuild},
        ext_modules= [foo])
-
