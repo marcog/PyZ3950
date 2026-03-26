@@ -676,7 +676,13 @@ class ResultSet(_AttrCheck, _ErrHdlr):
                     if typ != 'octet-aligned':
                         raise ProtocolError (
                             "Weird record EXTERNAL MARC type: " + typ)
-                rec = Record (oid, dat, dbname, getattr(self._conn, 'charset', None))
+                rec = Record (
+                    oid,
+                    dat,
+                    dbname,
+                    getattr(self._conn, 'charset', None),
+                    syntax = self.preferredRecordSyntax,
+                )
             else:
                 raise ProtocolError ("Bad typ %s data %s" %
                                      (str (typ), str(data)))
@@ -723,9 +729,16 @@ using this)
       OPAC     -- ditto
       
       Other representations are not yet defined."""
-    def __init__ (self, oid, data, dbname, charset = None):
+    def __init__ (self, oid, data, dbname, charset = None, syntax = None):
         """Only for use by ResultSet"""
-        self.syntax = _oid_to_key (oid)
+        if syntax is not None and syntax in _record_type_dict:
+            rt = _record_type_dict[syntax]
+            if rt.oid == oid:
+                self.syntax = syntax
+            else:
+                self.syntax = _oid_to_key (oid)
+        else:
+            self.syntax = _oid_to_key (oid)
         self._rt = _record_type_dict [self.syntax]
         self.data = self._rt.preproc (data)
         self.databaseName = dbname
