@@ -1,12 +1,67 @@
 # PyZ3950
 
-<img src="https://travis-ci.org/danizen/PyZ3950.svg?branch=master" alt="Build Status">
-
 ## Summary
 
 Pure-python Z39.50 implementation
 
-## Update Notes 
+## Fork Status
+
+This fork is maintained at [marcog/PyZ3950](https://github.com/marcog/PyZ3950).
+It is intended to keep PyZ3950 usable on modern Python versions while upstream
+maintenance is limited.
+
+Current fork goals:
+
+- keep editable/installable builds working on modern Python
+- keep the core ZOOM client usable against still-active Z39.50 targets
+- add small, practical helpers for real catalog integrations
+
+Current fork baseline:
+
+- Python `3.10+`
+- packaging through `setuptools` and `pyproject.toml`
+- focused pytest collection under `tests/`
+- provider profile helpers for `LoC`, `LIBRIS`, `Sudoc`, and `BnF`
+
+## Maintainer Notes
+
+This fork deliberately prefers small compatibility changes over deep refactors.
+The codebase still contains historical modules, examples, and partially tested
+paths. The maintained surface is:
+
+- `PyZ3950.zoom`
+- `PyZ3950.ccl`
+- `PyZ3950.profiles`
+- tests under `tests/`
+
+If upstream becomes active again, changes should be kept easy to cherry-pick.
+
+## Quick Start
+
+```bash
+python -m pip install git+https://github.com/marcog/PyZ3950.git
+```
+
+```python
+from PyZ3950 import profiles
+from PyZ3950 import zoom
+
+conn = profiles.connect("loc", connect=False)
+conn.connect()
+query = zoom.Query("CCL", 'ti="1066 and all that"')
+result = conn.search(query)
+print(len(result))
+conn.close()
+```
+
+Available built-in profiles:
+
+- `loc`
+- `libris`
+- `sudoc`
+- `bnf`
+
+## Legacy Notes
 
 This code is updated to support both Python 2.7+ and Python 3.5+ using 2to3
 and some hand changes.  The one test I got working in Python 2.7 is updated
@@ -50,7 +105,6 @@ Aaron Lav <asl2@pobox.com>
 ## License
 
 X Consortium License (Note that since X-Windows is now covered by the MIT License, this may be soon, but I hesitate to change it without the constructive agreement of the author.)
-
 
 
 
